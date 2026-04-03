@@ -6,4 +6,16 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./callDirectionBreakdown";
+export * from "./callStatusBreakdown";
+export * from "./columnInfo";
+export * from "./columnInfoType";
+export * from "./detectedFeatures";
+export * from "./errorResponse";
+export * from "./fetchSheetRequest";
 export * from "./healthStatus";
+export * from "./sentimentBreakdown";
+export * from "./sheetDataResponse";
+export * from "./sheetRow";
+export * from "./sheetSummaryResponse";
+export * from "./sheetSummaryResponseTopBulkCallNamesItem";

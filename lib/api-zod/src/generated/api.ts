@@ -14,3 +14,111 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Fetches data from a public Google Sheet CSV export URL and returns parsed rows and column info
+ * @summary Fetch Google Sheets data
+ */
+export const FetchSheetDataBody = zod.object({
+  sheetUrl: zod
+    .string()
+    .describe("The Google Sheets URL (regular share URL or CSV export URL)"),
+  sheetId: zod
+    .string()
+    .optional()
+    .describe("Optionally pass the sheet\/tab ID (gid parameter)"),
+});
+
+export const FetchSheetDataResponse = zod.object({
+  rows: zod.array(
+    zod
+      .record(zod.string(), zod.string())
+      .describe("A single row from the sheet, keyed by column header"),
+  ),
+  columns: zod.array(
+    zod.object({
+      name: zod.string(),
+      type: zod.enum(["string", "number", "date", "boolean", "unknown"]),
+      sampleValues: zod.array(zod.string()),
+      nonEmptyCount: zod.number(),
+    }),
+  ),
+  totalRows: zod.number(),
+  detectedFeatures: zod.object({
+    hasCallMetrics: zod.boolean(),
+    hasSentiment: zod.boolean(),
+    hasCallDirection: zod.boolean(),
+    hasCallStatus: zod.boolean(),
+    hasTranscript: zod.boolean(),
+    hasDriverInfo: zod.boolean(),
+    hasBulkCalls: zod.boolean(),
+    hasJoinInterest: zod.boolean(),
+    hasRecording: zod.boolean(),
+    hasPhoneNumbers: zod.boolean(),
+  }),
+});
+
+/**
+ * Returns computed metrics and aggregates based on available columns
+ * @summary Get aggregated summary of sheet data
+ */
+export const FetchSheetSummaryBody = zod.object({
+  sheetUrl: zod
+    .string()
+    .describe("The Google Sheets URL (regular share URL or CSV export URL)"),
+  sheetId: zod
+    .string()
+    .optional()
+    .describe("Optionally pass the sheet\/tab ID (gid parameter)"),
+});
+
+export const FetchSheetSummaryResponse = zod.object({
+  totalCalls: zod.number(),
+  totalRows: zod.number(),
+  avgDurationMinutes: zod.number().optional(),
+  totalDurationMinutes: zod.number().optional(),
+  sentimentBreakdown: zod
+    .object({
+      positive: zod.number(),
+      negative: zod.number(),
+      neutral: zod.number(),
+      unknown: zod.number(),
+    })
+    .optional(),
+  callDirectionBreakdown: zod
+    .object({
+      inbound: zod.number(),
+      outbound: zod.number(),
+    })
+    .optional(),
+  callStatusBreakdown: zod.record(zod.string(), zod.number()).optional(),
+  joinInterestCount: zod.number().optional(),
+  topBulkCallNames: zod
+    .array(
+      zod.object({
+        name: zod.string(),
+        count: zod.number(),
+      }),
+    )
+    .optional(),
+  detectedFeatures: zod.object({
+    hasCallMetrics: zod.boolean(),
+    hasSentiment: zod.boolean(),
+    hasCallDirection: zod.boolean(),
+    hasCallStatus: zod.boolean(),
+    hasTranscript: zod.boolean(),
+    hasDriverInfo: zod.boolean(),
+    hasBulkCalls: zod.boolean(),
+    hasJoinInterest: zod.boolean(),
+    hasRecording: zod.boolean(),
+    hasPhoneNumbers: zod.boolean(),
+  }),
+  columns: zod.array(
+    zod.object({
+      name: zod.string(),
+      type: zod.enum(["string", "number", "date", "boolean", "unknown"]),
+      sampleValues: zod.array(zod.string()),
+      nonEmptyCount: zod.number(),
+    }),
+  ),
+});
