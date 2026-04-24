@@ -1,0 +1,321 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: sheets
+    description: Google Sheets data operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /sheets/data:
+    post:
+      operationId: fetchSheetData
+      tags: [sheets]
+      summary: Fetch Google Sheets data
+      description: Fetches data from a public Google Sheet CSV export URL and returns parsed rows and column info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FetchSheetRequest"
+      responses:
+        "200":
+          description: Sheet data parsed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SheetDataResponse"
+        "400":
+          description: Invalid request or sheet URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Request validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+        "500":
+          description: Failed to fetch sheet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /sheets/summary:
+    post:
+      operationId: fetchSheetSummary
+      tags: [sheets]
+      summary: Get aggregated summary of sheet data
+      description: Returns computed metrics and aggregates based on available columns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FetchSheetRequest"
+      responses:
+        "200":
+          description: Summary computed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SheetSummaryResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Request validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+        "500":
+          description: Failed to process
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    FetchSheetRequest:
+      type: object
+      properties:
+        sheetUrl:
+          type: string
+          format: uri
+          description: The Google Sheets URL (regular share URL or CSV export URL)
+        sheetId:
+          type: string
+          description: Optionally pass the sheet/tab ID (gid parameter)
+      required:
+        - sheetUrl
+
+    SheetRow:
+      type: object
+      additionalProperties:
+        type: string
+      description: A single row from the sheet, keyed by column header
+
+    ColumnInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [string, number, date, boolean, unknown]
+        sampleValues:
+          type: array
+          items:
+            type: string
+        nonEmptyCount:
+          type: integer
+      required:
+        - name
+        - type
+        - sampleValues
+        - nonEmptyCount
+
+    DetectedFeatures:
+      type: object
+      properties:
+        hasCallMetrics:
+          type: boolean
+        hasSentiment:
+          type: boolean
+        hasCallDirection:
+          type: boolean
+        hasCallStatus:
+          type: boolean
+        hasTranscript:
+          type: boolean
+        hasDriverInfo:
+          type: boolean
+        hasBulkCalls:
+          type: boolean
+        hasJoinInterest:
+          type: boolean
+        hasRecording:
+          type: boolean
+        hasPhoneNumbers:
+          type: boolean
+      required:
+        - hasCallMetrics
+        - hasSentiment
+        - hasCallDirection
+        - hasCallStatus
+        - hasTranscript
+        - hasDriverInfo
+        - hasBulkCalls
+        - hasJoinInterest
+        - hasRecording
+        - hasPhoneNumbers
+
+    SheetDataResponse:
+      type: object
+      properties:
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/SheetRow"
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/ColumnInfo"
+        totalRows:
+          type: integer
+        detectedFeatures:
+          $ref: "#/components/schemas/DetectedFeatures"
+      required:
+        - rows
+        - columns
+        - totalRows
+        - detectedFeatures
+
+    SentimentBreakdown:
+      type: object
+      properties:
+        positive:
+          type: integer
+        negative:
+          type: integer
+        neutral:
+          type: integer
+        unknown:
+          type: integer
+      required:
+        - positive
+        - negative
+        - neutral
+        - unknown
+
+    CallDirectionBreakdown:
+      type: object
+      properties:
+        inbound:
+          type: integer
+        outbound:
+          type: integer
+      required:
+        - inbound
+        - outbound
+
+    CallStatusBreakdown:
+      type: object
+      additionalProperties:
+        type: integer
+
+    SheetSummaryResponse:
+      type: object
+      properties:
+        totalCalls:
+          type: integer
+        totalRows:
+          type: integer
+        avgDurationMinutes:
+          type: number
+        totalDurationMinutes:
+          type: number
+        sentimentBreakdown:
+          $ref: "#/components/schemas/SentimentBreakdown"
+        callDirectionBreakdown:
+          $ref: "#/components/schemas/CallDirectionBreakdown"
+        callStatusBreakdown:
+          $ref: "#/components/schemas/CallStatusBreakdown"
+        joinInterestCount:
+          type: integer
+        topBulkCallNames:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              count:
+                type: integer
+            required:
+              - name
+              - count
+        detectedFeatures:
+          $ref: "#/components/schemas/DetectedFeatures"
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/ColumnInfo"
+      required:
+        - totalCalls
+        - totalRows
+        - detectedFeatures
+        - columns
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+        - detail
+
+    ValidationError:
+      type: object
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+              - type: string
+              - type: integer
+        msg:
+          type: string
+        type:
+          type: string
+      required:
+        - loc
+        - msg
+        - type
+
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValidationError"
+      required:
+        - detail
