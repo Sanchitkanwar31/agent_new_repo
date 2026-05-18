@@ -364,9 +364,9 @@ export default function Home() {
             <Bell className="w-4 h-4 text-[#fdcd08]" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#ef6c00] rounded-full" />
           </button> */}
-          <button className="w-9 h-9 flex items-center justify-center rounded-lg border border-[#ef6c00]/70 bg-white/10 hover:bg-[#fdcd08]/10 transition-colors" data-testid="button-user">
+          {/* <button className="w-9 h-9 flex items-center justify-center rounded-lg border border-[#ef6c00]/70 bg-white/10 hover:bg-[#fdcd08]/10 transition-colors" data-testid="button-user">
             <User className="w-4 h-4 text-[#fdcd08]" />
-          </button>
+          </button> */}
         </div>
       </header>
 

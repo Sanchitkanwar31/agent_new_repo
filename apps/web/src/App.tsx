@@ -4,16 +4,23 @@ import { Toaster } from "@/shared/ui/toaster";
 import { TooltipProvider } from "@/shared/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import DashboardHome from "@/features/dashboard/pages/home";
+import LandingPage from "@/features/landing/pages/landing-page";
 
 const queryClient = new QueryClient();
 
 function Router() {
   return (
+    // <Switch>
+    //   <Route path="/dashboard" component={DashboardHome} />
+    //   <Route path="/">
+    //     <Redirect to="/dashboard" />
+    //   </Route>
+    //   <Route component={NotFound} />
+    // </Switch>
+
     <Switch>
+      <Route path="/" component={LandingPage} />
       <Route path="/dashboard" component={DashboardHome} />
-      <Route path="/">
-        <Redirect to="/dashboard" />
-      </Route>
       <Route component={NotFound} />
     </Switch>
   );
