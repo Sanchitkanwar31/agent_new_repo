@@ -26,6 +26,7 @@
 import { CtaSection } from "@/features/landing/components/cta-section";
 import { FeaturesSection } from "@/features/landing/components/features-section";
 import { HeroSection } from "@/features/landing/components/hero-section";
+import { LandingFooter } from "@/features/landing/components/landing-footer";
 import { LandingNavbar } from "@/features/landing/components/landing-navbar";
 import { ServiceSpotlightSection } from "@/features/landing/components/service-spotlight-section";
 import { StatsSection } from "@/features/landing/components/stats-section";
@@ -44,6 +45,7 @@ export default function LandingPage() {
         <StatsSection />
         <CtaSection />
       </main>
+      <LandingFooter />
     </div>
   );
 }
