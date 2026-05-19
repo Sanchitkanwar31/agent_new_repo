@@ -40,7 +40,7 @@ export function LandingFooter() {
                     <p className='footer_desc'>
                         AI-driven mobility and blue-collar hiring platform connecting logistics companies with verified skilled manpower.
                     </p>
-                    <div className='footer_actions'>
+                    {/* <div className='footer_actions'>
                         <a href={playStoreUrl} target="_blank" rel="noopener noreferrer" className='play_link' aria-label="Download Signo on Google Play">
                             <FaGooglePlay className='play_icon' />
                             <span>
@@ -48,7 +48,7 @@ export function LandingFooter() {
                                 Google Play
                             </span>
                         </a>
-                    </div>
+                    </div> */}
                 </div>
                 <div className='footer_social'>
                     <p className='footer_title'>Social</p>
@@ -108,8 +108,8 @@ export function LandingFooter() {
             <div className='footer_bottom'>
                 <p>&copy; {currentYear} Signodrive Technologies Pvt. Ltd. All rights reserved.</p>
                 <div className='legal_links'>
-                    <a href="https://signo.in/in/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-                    <a href="https://signo.in/in/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+                    <a href="https://www.signo.in/in/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+                    <a href="https://www.signo.in/in/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a>
                 </div>
             </div>
         </footer>
