@@ -7,7 +7,7 @@ Monorepo for the campaign analytics dashboard: a React (Vite) frontend and a Fas
 | Path | Role |
 |------|------|
 | `apps/web` | Dashboard UI (`@workspace/web`) |
-| `apps/api-fastapi` | FastAPI backend (`/api`) |
+| `apps/api_fastapi` | FastAPI backend (`/api`) |
 | `apps/mockup-sandbox` | Optional UI sandbox (not required for the product) |
 | `packages/api-spec` | OpenAPI spec and Orval codegen |
 | `packages/api-zod` | Zod schemas generated from the spec |
@@ -26,7 +26,7 @@ Monorepo for the campaign analytics dashboard: a React (Vite) frontend and a Fas
 1. Copy `.env.example` to `.env` at the repo root and adjust values if needed.
 2. Install workspace dependencies: `pnpm install`
 3. Install FastAPI backend dependencies:
-   - `cd apps/api-fastapi`
+   - `cd apps/api_fastapi`
    - `pip install -e .[dev]`
 4. Start API and web together from the repo root: `pnpm dev`
 
@@ -39,7 +39,7 @@ Individual apps:
 
 ## Production
 
-- API (FastAPI): run `python apps/api-fastapi/run.py` with `PORT` set.
+- API (FastAPI): run `python apps/api_fastapi/run.py` with `PORT` set.
 - Web: `pnpm --filter @workspace/web run build` - static assets are emitted under `apps/web/dist/public`. Serve that folder behind your CDN or static host. If the API is on another origin, set `VITE_API_BASE_URL` at build time.
 
 ## API contract

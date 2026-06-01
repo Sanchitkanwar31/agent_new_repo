@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-API_FASTAPI_ROOT = PROJECT_ROOT / "apps" / "api-fastapi"
+API_FASTAPI_ROOT = PROJECT_ROOT / "apps" / "api_fastapi"
 
 if str(API_FASTAPI_ROOT) not in sys.path:
     sys.path.insert(0, str(API_FASTAPI_ROOT))

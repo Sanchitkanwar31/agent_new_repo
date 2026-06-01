@@ -104,9 +104,9 @@ export type ServiceTab = {
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Features", href: "#features" },
-  { label: "Agent", href: "https://agent.signo.in" },
-  { label: "Stats", href: "#stats" },
+  { label: "Features", href: "/#features" },
+  { label: "Agent", href: "https://voiceai.signo.in" },
+  { label: "Pricing", href: "/billing" },
   { label: "Dashboard", href: "/dashboard" },
 ];
 

@@ -7,8 +7,8 @@
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./apps/**\" --if-present run typecheck",
-    "dev": "concurrently -n api,web -c blue,green \"python apps/api-fastapi/run.py\" \"pnpm --filter @workspace/web dev\"",
-    "dev:api": "python apps/api-fastapi/run.py",
+    "dev": "concurrently -n api,web -c blue,green \"uvicorn apps.api_fastapi.app.main:app  --reload\" \"pnpm --filter @workspace/web dev\"",
+    "dev:api": "uvicorn apps.api_fastapi.app.main:app --host 0.0.0.0 --port 8000",
     "dev:web": "pnpm --filter @workspace/web dev"
   },
   "private": true,

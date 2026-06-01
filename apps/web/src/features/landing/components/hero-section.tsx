@@ -56,19 +56,19 @@ export function HeroSection() {
         <div className="landing-hero-content">
           <div className="landing-hero-label">Voice AI Platform</div>
           <h1 className="landing-hero-title">
-            Build <em>Voice AI</em> Agents That Actually Work
+            Build <em>Voice AI</em> Agents That Handle Calls.
           </h1>
           <p className="landing-hero-sub">
-            Design, test, and deploy production-ready voice assistants with a
-            clean workflow that scales from first prototype to live operations.
+           Design and deploy production-ready voice agents
+           faster than ever, from prototype to live in clicks.
           </p>
 
           <div className="landing-hero-actions">
             <Link href="/dashboard" className="landing-btn landing-btn-primary landing-btn-lg">
               Go To Dashboard
             </Link>
-            <a href="#features" className="landing-btn landing-btn-outline landing-btn-lg">
-              View Features
+            <a href="/billing" className="landing-btn landing-btn-outline landing-btn-lg">
+              View Plans
             </a>
           </div>
 

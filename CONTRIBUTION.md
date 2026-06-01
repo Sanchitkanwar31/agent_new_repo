@@ -6,7 +6,7 @@ Sheet Insights is a pnpm-based monorepo for analyzing public Google Sheets and r
 
 The active runtime is split into:
 
-- `apps/api-fastapi` - FastAPI backend that fetches a public Google Sheet CSV export, parses it, and returns structured data.
+- `apps/api_fastapi` - FastAPI backend that fetches a public Google Sheet CSV export, parses it, and returns structured data.
 - `apps/web` - React + Vite dashboard that consumes the API and renders charts, tables, and summary cards.
 - `apps/mockup-sandbox` - Optional preview server for component experiments and mockup rendering.
 - `packages/api-spec` - OpenAPI source of truth and Orval code generation entry point.
@@ -35,11 +35,11 @@ The API also exposes `POST /api/sheets/summary` for aggregate consumers, but the
 
 ### Apps
 
-- `apps/api-fastapi/app/api/routes` - API route handlers (`health`, `sheets`).
-- `apps/api-fastapi/app/services` - Sheet feature business services (fetch, pipeline, summary).
-- `apps/api-fastapi/app/middleware` - Cross-cutting middleware and exception handlers.
-- `apps/api-fastapi/app/core` - Runtime configuration and logging setup.
-- `apps/api-fastapi/app/integrations` - External integrations (Google Sheets CSV fetching).
+- `apps/api_fastapi/app/api/routes` - API route handlers (`health`, `sheets`).
+- `apps/api_fastapi/app/services` - Sheet feature business services (fetch, pipeline, summary).
+- `apps/api_fastapi/app/middleware` - Cross-cutting middleware and exception handlers.
+- `apps/api_fastapi/app/core` - Runtime configuration and logging setup.
+- `apps/api_fastapi/app/integrations` - External integrations (Google Sheets CSV fetching).
 - `apps/web/src/features` - Feature-first frontend modules (for example `dashboard`).
 - `apps/web/src/features/dashboard/components` - Dashboard-only components.
 - `apps/web/src/features/dashboard/pages` - Dashboard route pages.
@@ -115,7 +115,7 @@ Notes:
 
 ### Production Build
 
-- API: `python apps/api-fastapi/run.py`
+- API: `python apps/api_fastapi/run.py`
 - Web: `pnpm --filter @workspace/web run build`
 
 The web build is emitted to `apps/web/dist/public`.
@@ -170,7 +170,7 @@ Pull request checklist:
 - Set `PORT` and `NODE_ENV=production`.
 - Set `LOG_LEVEL` to the desired verbosity.
 - If outbound requests need a custom user agent, set `HTTP_USER_AGENT`.
-- Run `python apps/api-fastapi/run.py` with production environment variables.
+- Run `python apps/api_fastapi/run.py` with production environment variables.
 
 ### Web
 

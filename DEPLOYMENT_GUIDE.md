@@ -1,7 +1,7 @@
 # Sheet Insights Deployment Guide
 
 This guide covers production deployment for:
-- `apps/api-fastapi` (FastAPI backend)
+- `apps/api_fastapi` (FastAPI backend)
 - `apps/web` (Vite static frontend)
 
 ## 1. Prerequisites
@@ -37,11 +37,11 @@ From repo root:
 
 ```bash
 pnpm install
-cd apps/api-fastapi
+cd apps/api_fastapi
 pip install -e .[dev]
 cd ../..
 pnpm --filter @workspace/web run build
-python apps/api-fastapi/run.py
+python apps/api_fastapi/run.py
 ```
 
 Validate:
@@ -57,7 +57,7 @@ Choose one:
 
 ### ECS Fargate high-level flow
 
-1. Build API image from `apps/api-fastapi`.
+1. Build API image from `apps/api_fastapi`.
 2. Push image to ECR.
 3. Create ECS task definition:
    - CPU/memory sized for CSV parsing workload.
