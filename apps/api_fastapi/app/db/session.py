@@ -38,22 +38,17 @@ from __future__ import annotations
 
 from functools import lru_cache
 from collections.abc import Generator
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from apps.api_fastapi.app.db.base import Base
 from apps.api_fastapi.app.utils.config import get_settings
 
 @lru_cache(maxsize=1)
 def get_engine():
     settings = get_settings()
-    database_url = settings.DATABASE_URL
-
-    if not database_url or not database_url.strip():
-        raise RuntimeError("DATABASE_URL must be set before creating the engine.")
 
     return create_engine(
-        database_url,
+        settings.validated_database_url(),
         pool_pre_ping=True,
         pool_size=20,
         max_overflow=40,
@@ -76,18 +71,3 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
-
-
-def init_db():
-    from apps.api_fastapi.app.model import models
-
-    engine = get_engine()
-    inspector = inspect(engine)
-
-    existing_tables = set(inspector.get_table_names())
-    model_tables = set(Base.metadata.tables.keys())
-
-    missing_tables = model_tables - existing_tables
-
-    if missing_tables:
-        Base.metadata.create_all(bind=engine)

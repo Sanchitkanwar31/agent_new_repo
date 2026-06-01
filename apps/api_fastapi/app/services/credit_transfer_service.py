@@ -18,9 +18,10 @@ class CreditService:
         payment_order: RazorpayPaymentOrder
     ):
         logger.info(
-    f"ENTER paid_plan_transfer | order_id={payment_order.id} | "
-    f"payment_id={payment_order.razorpay_payment_id}"
-    )
+            "ENTER paid_plan_transfer | order_id=%s | payment_id=%s",
+            payment_order.id,
+            payment_order.razorpay_payment_id,
+        )
         try:
             locked_order = (
                 db.query(RazorpayPaymentOrder)
@@ -41,14 +42,35 @@ class CreditService:
                     "reason": "already_transferred"
                 }
 
-            locked_order.transfer_status = "PENDING"
-            db.commit()
+            if locked_order.transfer_status == "PROCESSING":
+                return {
+                    "success": False,
+                    "reason": "transfer_in_progress"
+                }
+
+            if not locked_order.razorpay_payment_id:
+                return {
+                    "success": False,
+                    "reason": "missing_razorpay_payment_id"
+                }
+
             transaction_ref = f"rzp:{locked_order.razorpay_payment_id}"
             transaction = (
                 db.query(CreditTransaction)
                 .filter(CreditTransaction.transaction_id == transaction_ref)
                 .first()
             )
+
+            if transaction and transaction.status == "SUCCESS":
+                locked_order.transfer_status = "SUCCESS"
+                locked_order.failure_reason = None
+                db.commit()
+                return {
+                    "success": True,
+                    "reason": "already_transferred"
+                }
+
+            locked_order.transfer_status = "PROCESSING"
 
             if not transaction:
                 transaction = CreditTransaction(
@@ -59,15 +81,18 @@ class CreditService:
                     total_cost=(
                         locked_order.minutes * locked_order.cost_per_min
                     ),
-                    status="PENDING"
+                    status="PROCESSING"
                 )
                 db.add(transaction)
-                db.flush()
+            else:
+                transaction.status = "PROCESSING"
+                transaction.failure_reason = None
 
             transfer_result = await TransferService.transfer_credits(
                 to_organization_id=locked_order.to_organization_id,
                 minutes=locked_order.minutes,
-                cost_per_min=locked_order.cost_per_min
+                cost_per_min=locked_order.cost_per_min,
+                idempotency_key=transaction_ref,
             )
 
             if transfer_result["success"]:

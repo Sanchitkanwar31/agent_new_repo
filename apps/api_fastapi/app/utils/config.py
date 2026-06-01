@@ -130,6 +130,32 @@ class Settings(BaseSettings):
         except json.JSONDecodeError:
             return DEFAULT_BILLING_PLANS
 
+    def validated_database_url(self) -> str:
+        value = self.DATABASE_URL.strip() if isinstance(self.DATABASE_URL, str) else ""
+        if not value:
+            raise RuntimeError("DATABASE_URL must be set before creating the engine.")
+        return value
+
+    def validated_transfer_api_url(self) -> str:
+        value = self.transfer_api_url.strip() if isinstance(self.transfer_api_url, str) else ""
+        if not value:
+            raise RuntimeError("TRANSFER_API_URL must be set before calling the transfer API.")
+        return value.rstrip("/")
+
+    def validated_razorpay_api_url(self) -> str:
+        value = self.RAZORPAY_API_URL.strip() if isinstance(self.RAZORPAY_API_URL, str) else ""
+        if not value:
+            raise RuntimeError("RAZORPAY_API_URL must be set before calling Razorpay.")
+        return value.rstrip("/")
+
+    def validated_reseller_organizations_url(self) -> str:
+        value = self.normalized_reseller_organizations_url
+        if not value:
+            raise RuntimeError(
+                "RESELLER_ORGANIZATIONS_URL or TRANSFER_API_URL must be set before fetching organizations."
+            )
+        return value
+
     @property
     def normalized_reseller_organizations_url(self) -> str | None:
         value = self.reseller_organizations_url or self.transfer_api_url

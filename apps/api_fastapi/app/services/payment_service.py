@@ -67,10 +67,14 @@ class PaymentService:
             "receipt": receipt,
             "notes": notes
         }
+        try:
+            razorpay_api_url = settings.validated_razorpay_api_url()
+        except RuntimeError as exc:
+            raise ValueError(str(exc)) from exc
 
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.post(
-                f"{settings.RAZORPAY_API_URL.rstrip('/')}/orders",
+                f"{razorpay_api_url}/orders",
                 json=payload,
                 auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
             )
@@ -91,7 +95,7 @@ class PaymentService:
             amount=plan["amount"],
             currency=settings.RAZORPAY_CURRENCY,
             status=order_data.get("status", "created"),
-            transfer_status="NOT_STARTED"
+            transfer_status="INIT"
         )
 
         db.add(payment_order)

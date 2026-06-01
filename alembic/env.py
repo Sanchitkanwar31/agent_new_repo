@@ -7,7 +7,10 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from apps.api_fastapi.app.db.base import Base
-from apps.api_fastapi.app.model import models  # noqa: F401
+from apps.api_fastapi.app.model import models_import  # noqa: F401
+
+from dotenv import load_dotenv
+load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,8 +22,9 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 database_url = os.getenv("DATABASE_URL")
-if database_url:
-    config.set_main_option("sqlalchemy.url", database_url)
+if not database_url or not database_url.strip():
+    raise RuntimeError("DATABASE_URL must be set before running Alembic migrations.")
+config.set_main_option("sqlalchemy.url", database_url.strip())
 
 target_metadata = Base.metadata
 

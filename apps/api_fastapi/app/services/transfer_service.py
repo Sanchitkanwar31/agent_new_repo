@@ -68,13 +68,21 @@ logger = logging.getLogger(__name__)
 class TransferService:
 
     @staticmethod
+    def ensure_transfer_configured() -> None:
+        if not settings.transfer_api_key:
+            raise ValueError("Missing transfer config: TRANSFER_API_KEY")
+        if not settings.transfer_api_url:
+            raise ValueError("Missing transfer config: TRANSFER_API_URL")
+
+    @staticmethod
     async def transfer_credits(
         to_organization_id: int,
         minutes: int,
-        cost_per_min: float
+        cost_per_min: float,
+        idempotency_key: str | None = None
     ):
-
-        transaction_id = str(uuid.uuid4())
+        TransferService.ensure_transfer_configured()
+        transaction_id = idempotency_key or str(uuid.uuid4())
 
         payload = {
             "to_organization_id": to_organization_id,
@@ -88,10 +96,7 @@ class TransferService:
             "Content-Type": "application/json"
         }
 
-        transfer_url = (
-            f"{settings.transfer_api_url.rstrip('/')}"
-            f"/reseller/credits/transfer"
-        )
+        transfer_url = f"{settings.validated_transfer_api_url()}/reseller/credits/transfer"
 
         logger.info(
             f"Initiating transfer | "

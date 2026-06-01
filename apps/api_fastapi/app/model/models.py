@@ -269,7 +269,7 @@ class RazorpayPaymentOrder(Base):
     transfer_status = Column(
         String,
         nullable=False,
-        default="NOT_STARTED",
+        default="INIT",
         index=True
     )
 
@@ -288,7 +288,6 @@ class RazorpayPaymentOrder(Base):
         server_default=func.now(),
         onupdate=func.now()
     )
-    transfer_status = Column(String, default="INIT")  
 
 
 class WebhookEvent(Base):

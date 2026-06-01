@@ -37,7 +37,7 @@ export default function BillingPage() {
   useEffect(() => {
     let cancelled = false;
 
-    apiJson<PlansResponse>("/api/api/v1/billing/plans")
+    apiJson<PlansResponse>("/api/v1/billing/plans")
       .then((data) => {
         if (cancelled) return;
 
@@ -79,7 +79,7 @@ export default function BillingPage() {
 
     try {
       const [order] = await Promise.all([
-        apiJson<RazorpayOrderResponse>("/api/api/v1/billing/razorpay/orders", {
+        apiJson<RazorpayOrderResponse>("/api/v1/billing/razorpay/orders", {
           method: "POST",
           body: JSON.stringify({ email: normalizedEmail, plan_code: selectedPlanCode }),
         }),
