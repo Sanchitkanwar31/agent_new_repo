@@ -174,6 +174,14 @@ async def razorpay_webhook(
     request: Request,
     db: Session = Depends(get_db),
 ):
+    logger.info(
+        "Razorpay webhook received | method=%s | path=%s | content_type=%s | signature_present=%s | event_id=%s",
+        request.method,
+        request.url.path,
+        request.headers.get("content-type"),
+        bool(request.headers.get("x-razorpay-signature")),
+        request.headers.get("x-razorpay-event-id"),
+    )
     body = await request.body()
     signature = request.headers.get("x-razorpay-signature")
 
