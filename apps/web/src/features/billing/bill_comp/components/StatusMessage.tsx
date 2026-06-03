@@ -14,15 +14,16 @@ export default function StatusMessage({ status }: StatusMessageProps) {
 
       {status.message === accountMessage ? (
         <>
-          Create an account on{" "}
-          <a
-            href="https://voiceai.signo.in"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            voiceai.signo.in
-          </a>{" "}
-          to activate your plan.
+          <span>
+            Create an account on <a
+              href="https://voiceai.signo.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontWeight: "bold" }}
+            >
+              <>voiceai.signo.in</>
+            </a> to activate your plan.
+          </span>
         </>
       ) : (
         status.message
