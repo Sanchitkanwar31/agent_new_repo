@@ -14,7 +14,7 @@ applications:
             - cd ../..
             - pnpm --filter @workspace/web run build
       artifacts:
-        baseDirectory: apps/web/dist/public
+        baseDirectory: apps/web/dist
         files:
           - '**/*'
       cache:

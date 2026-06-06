@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
   const port = Number(env.VITE_DEV_PORT ?? "5173");
   const apiPort = Number(env.API_PORT ?? "5000");
   const base = env.VITE_BASE_PATH ?? "/";
+  const apiBase = env.VITE_API_BASE || `http://127.0.0.1:${apiPort}`;
 
   return {
     base,
@@ -32,8 +33,12 @@ export default defineConfig(({ mode }) => {
       allowedHosts: true,
       proxy: {
         "/api": {
-          target: `http://127.0.0.1:${apiPort}`,
+          target: apiBase,
           changeOrigin: true,
+          rewrite: (path) => path,
+          secure: false,
+          ws: true,
+          logLevel: "debug",
         },
       },
       fs: {
