@@ -3,7 +3,7 @@ import { setBaseUrl } from "@workspace/api-client-react";
 import App from "./App";
 import "./index.css";
 
-const apiBase = import.meta.env.VITE_API_BASE_URL;
+const apiBase = import.meta.env.VITE_API_BASE;
 if (typeof apiBase === "string" && apiBase.length > 0) {
   setBaseUrl(apiBase);
 }
